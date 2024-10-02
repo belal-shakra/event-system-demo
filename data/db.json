@@ -10,6 +10,22 @@
         1,
         3
       ]
+    },
+    {
+      "id": "846a",
+      "username": "lolo",
+      "email": "lolo@lolo.com",
+      "publishedEvents": [],
+      "password": "password",
+      "registeredEvents": []
+    },
+    {
+      "id": "3577",
+      "username": "lolo",
+      "email": "lolo@lolo.com",
+      "publishedEvents": [],
+      "password": "password",
+      "registeredEvents": []
     }
   ],
   "events": [
