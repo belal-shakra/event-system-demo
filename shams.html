@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body onload="loadData()">
+    <div id="data">
+        <button onclick="postData(data)">Add</button>
+        <button onclick="getData()">check</button>
+        <button onclick="getUsers()">getUsers</button>
+        <button onclick="getEvents()">getEvents</button>
+        <button onclick="addUser('belal', 'belal@mail.com', 'belal123!')">addUser</button>
+        <button onclick="addEvent('Football game', 'test description...', 'myimg.png', 'sports', '2024-11-20T13:00:00', '2024-11-20T16:00:00', 'Amman, sportCity', 1, 20)">addEvent</button>
+        <button onclick="deleteUser(2)">deleteUser</button>
+        <button onclick="deleteEvent('b55b')">deleteEvent</button>
+    </div>
+<script>
+    async function getUsers() { //✅
+        try {
+            const url = "http://localhost:3000/users";
+            const response = await fetch(url);
+
+            if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+            }
+            const users = await response.json();
+            console.log(users);
+            return users;
+        } catch (error) {  
+            console.error(error.message);
+        }
+    }
+    async function getEvents() { //✅
+        try {
+            const url = "http://localhost:3000/events";
+            const response = await fetch(url);
+
+            if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+            }
+            const events = await response.json();
+            console.log(events);
+            return events;
+        } catch (error) {  
+            console.error(error.message);
+        }
+    }
+    async function addUser(username, email, password, publishedEvents = [], registeredEvents = []) {  //✅
+        // const username = document.getElementById('username').value;
+        // const email = document.getElementById('email').value;
+
+        if (username && email && password ) {
+            const response = await fetch("http://localhost:3000/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "username": username,
+                    "email": email,
+                    "publishedEvents": publishedEvents,
+                    "password": password,
+                    "registeredEvents": registeredEvents
+                })
+            });
+            if (response.ok) {
+                alert("User added!");
+                loadData(); // Reload the data
+            } else {
+                alert("Failed to add user.");
+            }
+        } else {
+            alert("Please fill in all fields.");
+        }
+    }
+    async function addEvent(title, description, image, category, //✅
+    startTime, endTime, location, organizer, totalSeats, bookedSeats = 0, attendees = []) {
+        // const username = document.getElementById('username').value;
+        // const email = document.getElementById('email').value;
+
+        if (title && description && image && category && startTime && endTime
+        && location && organizer && totalSeats) {
+            const response = await fetch("http://localhost:3000/events", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "title": title,
+                    "description": description,
+                    "image": image,
+                    "category": category,
+                    "startTime": startTime,
+                    "endTime": endTime,
+                    "location": location,
+                    "organizer": organizer,
+                    "totalSeats": totalSeats,
+                    "bookedSeats": bookedSeats,
+                    "attendees": attendees
+                })
+            });
+            if (response.ok) {
+                alert("event added!");
+                loadData(); // Reload the data
+            } else {
+                alert("Failed to add event.");
+            }
+        } else {
+            alert("Please fill in all fields.");
+        }
+    }
+    async function deleteUser(id) { //✅
+        // const id = document.getElementById('deleteId').value;
+        let apiUrl = "http://localhost:3000/users";
+        if (id) {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: "DELETE"
+            });
+            if (response.ok) {
+                alert("User deleted!");
+                loadData(); // Reload the data
+            } else {
+                alert("Failed to delete user.");
+            }
+        } else {
+            alert("Please provide an ID.");
+        }
+    }
+    async function deleteEvent(id) { //✅
+        // const id = document.getElementById('deleteId').value;
+        let apiUrl = "http://localhost:3000/events";
+        if (id) {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: "DELETE"
+            });
+            if (response.ok) {
+                alert("event deleted!");
+                loadData(); // Reload the data
+            } else {
+                alert("Failed to delete event.");
+            }
+        } else {
+            alert("Please provide an ID.");
+        }
+    }
+
+
+    async function loadData(){
+        const users = await getUsers()
+        // console.log(users);
+        for (user of users) {
+            document.getElementById("data").innerHTML += `
+        <h1>${user.id}</h1>
+        <h1>${user.username}</h1>
+        <h1>${user.email}</h1>
+        <h1>${user.publishedEvents}</h1>
+        `;
+            
+        }
+
+        
+    }
+
+
+    </script>
+</body>
+</html>
